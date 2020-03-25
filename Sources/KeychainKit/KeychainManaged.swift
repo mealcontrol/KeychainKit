@@ -41,4 +41,9 @@ public struct KeychainManaged<Object: Codable> {
             keychain.setData(data, forKey: key)
         }
     }
+    
+    @discardableResult
+    public func delete() -> Result<Void, Error> {
+        keychain.delete(key: key)
+    }
 }
