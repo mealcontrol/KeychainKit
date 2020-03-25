@@ -11,11 +11,11 @@ import Security
 extension Keychain {
 
     /// Options, used to determine keychain item access. The default value is accessibleWhenUnlocked.
-    public enum AccessOption {
+    public enum AccessPolicy {
         /// Default access option.
         ///
         /// Returns: .accessibleWhenUnlocked
-        public static var `default`: AccessOption { .accessibleWhenUnlocked }
+        public static var `default`: AccessPolicy { .accessibleWhenUnlocked }
 
         /// Access provided only if the device is unlocked by the user.
         ///

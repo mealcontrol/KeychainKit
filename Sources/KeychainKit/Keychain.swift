@@ -109,6 +109,12 @@ final public class Keychain {
         }
     }
     
+    @discardableResult
+    public func delete<Keys: CaseIterable>(all keys: Keys.Type) -> [Result<Void, Swift.Error>]
+    where Keys: RawRepresentable, Keys.RawValue == String  {
+        keys.allCases.map { self.delete(key: $0.rawValue) }
+    }
+    
     // MARK: - Methods
     
     /// Stores the data in the keychain.
@@ -122,12 +128,12 @@ final public class Keychain {
     public func setData(
         _ data: Data,
         forKey key: String,
-        withAccess access: AccessOption = .default
+        policy: AccessPolicy = .default
     ) -> Result<Void, Swift.Error> {
         lock.execute {
             unsafeDelete(key)
             
-            let accessible = access.value
+            let accessible = policy.value
             var query: [String : Any] = [
                 Key.class.value      : kSecClassGenericPassword,
                 Key.account.value    : keyPrefix.appending(key),

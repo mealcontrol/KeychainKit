@@ -19,6 +19,7 @@ public struct KeychainManaged<Object: Codable> {
         key: String,
         default defaultValue: Object,
         keychain: Keychain = .default,
+        policy: Keychain.AccessPolicy = .default,
         encoder: DataEncoder = JSONEncoder(),
         decoder: DataDecoder = JSONDecoder()
     ) {
