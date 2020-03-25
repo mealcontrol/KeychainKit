@@ -35,7 +35,11 @@ final public class Keychain {
     
     private let lock = NSLock()
     
-    public static var `default` = Keychain(keyPrefix: Bundle.main.bundleIdentifier.or(""))
+    public static var `default`: Keychain = {
+        guard let bundleID = Bundle.main.bundleIdentifier
+        else { return Keychain() }
+        return Keychain(keyPrefix: bundleID.appending("."))
+    }()
     
     /// Contains result code from the last operation.
     ///
@@ -45,7 +49,7 @@ final public class Keychain {
     /// A prefix that is added before the key.
     ///
     /// Note that `clear` method still clears all of the application data from the Keychain.
-    private(set) public var keyPrefix: String = ""
+    private(set) public var keyPrefix: String
     
     /// Access group that will be used to access keychain items.
     ///
@@ -79,7 +83,8 @@ final public class Keychain {
         getData(forKey: key)
     }
     
-    public func saveData(_ data: Data, forKey key: String) -> Result<Void, Swift.Error> {
+    public func saveData(_ data: Data, forKey key: String)
+    -> Result<Void, Swift.Error> {
         setData(data, forKey: key)
     }
     
@@ -114,8 +119,11 @@ final public class Keychain {
     ///
     /// - Returns: .success if the data was successfully written to the keychain.
     @discardableResult
-    public func setData(_ data: Data, forKey key: String,
-                        withAccess access: AccessOption = .default) -> Result<Void, Swift.Error> {
+    public func setData(
+        _ data: Data,
+        forKey key: String,
+        withAccess access: AccessOption = .default
+    ) -> Result<Void, Swift.Error> {
         lock.execute {
             unsafeDelete(key)
             
@@ -140,7 +148,8 @@ final public class Keychain {
     /// - Parameter key: The key that is used to read the keychain item.
     /// - Parameter asReference: If true, returns the data as reference (needed for things like NEVPNProtocol).
     /// - Returns: The data from the keychain. Returns nil if unable to read the item.
-    public func getData(forKey key: String, asReference: Bool = false) -> Result<Data, Swift.Error> {
+    public func getData(forKey key: String, asReference: Bool = false)
+    -> Result<Data, Swift.Error> {
         lock.execute {
             var query: [String: Any] = [
                 Key.class.value      : kSecClassGenericPassword,

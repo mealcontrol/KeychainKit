@@ -15,11 +15,13 @@ public struct KeychainManaged<Object: Codable> {
     private let decoder: DataDecoder
     private var keychain: Keychain
     
-    public init(key: String,
-                default defaultValue: Object,
-                keychain: Keychain = .default,
-                encoder: DataEncoder = JSONEncoder(),
-                decoder: DataDecoder = JSONDecoder()) {
+    public init(
+        key: String,
+        default defaultValue: Object,
+        keychain: Keychain = .default,
+        encoder: DataEncoder = JSONEncoder(),
+        decoder: DataDecoder = JSONDecoder()
+    ) {
         self.key = key
         self.defaultValue = defaultValue
         self.keychain = keychain
